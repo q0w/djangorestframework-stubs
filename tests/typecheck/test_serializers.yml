@@ -75,3 +75,21 @@
         @cached_property
         def fields(self) -> BindingDict:
             return super().fields
+
+- case: test_base_serializer_with_raise_exception_true
+  main: |
+    from rest_framework.viewsets import GenericViewSet
+    from rest_framework.request import Request
+    from rest_framework.response import Response
+    from rest_framework import serializers
+
+    class MySerializer(serializers.BaseSerializer):
+        pass
+
+    class MyView(generics.GenericViewSet):
+        serializer_class = MySerializer
+
+        def action(self, request: Request) -> Response:
+            serializer = self.serializer_class(request.data)
+            if serializer.is_valid(raise_exception=True):
+                return Response(status=200, data={})

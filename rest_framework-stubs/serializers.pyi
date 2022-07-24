@@ -15,6 +15,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    overload,
 )
 
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -121,7 +122,10 @@ class BaseSerializer(Generic[_IN], Field[Any, Any, Any, _IN]):
     ): ...
     @classmethod
     def many_init(cls, *args: Any, **kwargs: Any) -> BaseSerializer: ...
-    def is_valid(self, raise_exception: bool = ...) -> bool: ...
+    @overload
+    def is_valid(self, raise_exception: Literal[False] = ...) -> bool: ...
+    @overload
+    def is_valid(self, raise_exception: Literal[True] = ...) -> Literal[True] | NoReturn: ...
     @property
     def data(self) -> Any: ...
     @property
